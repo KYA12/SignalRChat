@@ -1,7 +1,7 @@
 import { Component, OnInit, ChangeDetectionStrategy, OnDestroy } from '@angular/core';
 import { ChatService } from '../services/chat.service';
 import { Observable } from 'rxjs';
-import { Message } from '../models/message'; // Adjust the path as necessary
+import { Message } from '../models/message';
 
 @Component({
 selector: 'app-chat',

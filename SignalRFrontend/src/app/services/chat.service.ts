@@ -2,7 +2,7 @@ import { Injectable } from '@angular/core';
 import { HubConnection, HubConnectionBuilder, HttpTransportType } from '@microsoft/signalr';
 import { BehaviorSubject } from 'rxjs';
 import { environment } from '../environments/environment';
-import { Message } from '../models/message'; // Adjust the path as necessary
+import { Message } from '../models/message';
 
 @Injectable({
 providedIn: 'root'

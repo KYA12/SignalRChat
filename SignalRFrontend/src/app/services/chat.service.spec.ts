@@ -1,7 +1,7 @@
 import { TestBed } from '@angular/core/testing';
 import { ChatService } from './chat.service';
 import { HubConnectionBuilder } from '@microsoft/signalr';
-import { Message } from '../models/message'; // Adjust the path as necessary
+import { Message } from '../models/message';
 
 describe('ChatService', () => {
 let service: ChatService;
