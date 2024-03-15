@@ -1,6 +1,7 @@
 import { TestBed } from '@angular/core/testing';
 import { ChatService } from './chat.service';
 import { HubConnectionBuilder } from '@microsoft/signalr';
+import { Message } from '../models/message'; // Adjust the path as necessary
 
 describe('ChatService', () => {
 let service: ChatService;
@@ -40,18 +41,17 @@ expect(status).toBe('Disconnected');
 });
 
 it('should send message', async () => {
-    const user = 'testUser';
-    const message = 'testMessage';
-    await service.startConnection();
-    await service.sendMessage(user, message);
-    expect(hubConnectionSpy.invoke).toHaveBeenCalledWith('SendMessage', user, message);
-    }
-);
+const newMessage = new Message();
+newMessage.user = 'testUser';
+newMessage.text = 'testMessage';
+await service.startConnection();
+await service.sendMessage(newMessage);
+expect(hubConnectionSpy.invoke).toHaveBeenCalledWith('SendMessage', newMessage.user, newMessage.text);
+});
 
 it('should stop connection', async () => {
 await service.startConnection();
 await service.stopConnection();
 expect(hubConnectionSpy.stop).toHaveBeenCalled();
 });
-
 });

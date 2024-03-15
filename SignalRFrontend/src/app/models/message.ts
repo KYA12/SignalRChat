@@ -1,4 +1,4 @@
 export class Message {
   public user!: string;
-  public msgText!: string;
+  public text!: string;
 }

@@ -2,11 +2,12 @@ import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { ChatComponent } from './chat.component';
 import { ChatService } from '../services/chat.service';
 import { Observable, of } from 'rxjs';
-import { FormsModule } from '@angular/forms'; 
+import { FormsModule } from '@angular/forms';
+import { Message } from '../models/message'; // Adjust the path as necessary
 
 // Mock ChatService
 class MockChatService {
-messages$: Observable<{ user: string, message: string }[]> = of([]);
+messages$: Observable<Message[]> = of([]);
 connectionStatus$: Observable<string> = of('Disconnected');
 
 startConnection = jasmine.createSpy('startConnection').and.returnValue(Promise.resolve());
@@ -46,16 +47,19 @@ expect(chatService.startConnection).toHaveBeenCalled();
 });
 
 it('should send message and clear input when sendMessage is called', async () => {
-component.user = 'User';
-component.message = 'Test Message';
+const testMessage = new Message();
+testMessage.user = 'User';
+testMessage.text = 'Test Message';
+component.user = testMessage.user;
+component.text = testMessage.text;
 await component.sendMessage();
-expect(chatService.sendMessage).toHaveBeenCalledWith('User', 'Test Message');
-expect(component.message).toBe('');
+expect(chatService.sendMessage).toHaveBeenCalledWith(testMessage);
+expect(component.text).toBe('');
 });
 
 it('should not send message if input is empty', async () => {
 component.user = 'User';
-component.message = '';
+component.text = '';
 await component.sendMessage();
 expect(chatService.sendMessage).not.toHaveBeenCalled();
 });

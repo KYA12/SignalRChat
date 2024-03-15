@@ -1,7 +1,8 @@
 import { Injectable } from '@angular/core';
-import { HubConnection, HubConnectionBuilder, HttpTransportType  } from '@microsoft/signalr';
+import { HubConnection, HubConnectionBuilder, HttpTransportType } from '@microsoft/signalr';
 import { BehaviorSubject } from 'rxjs';
 import { environment } from '../environments/environment';
+import { Message } from '../models/message'; // Adjust the path as necessary
 
 @Injectable({
 providedIn: 'root'
@@ -10,7 +11,7 @@ export class ChatService {
 private hubConnection!: HubConnection;
 private connectionStatusSource = new BehaviorSubject<string>('Disconnected');
 public connectionStatus$ = this.connectionStatusSource.asObservable();
-private messagesSource = new BehaviorSubject<{ user: string, message: string }[]>([]);
+private messagesSource = new BehaviorSubject<Message[]>([]);
 public messages$ = this.messagesSource.asObservable();
 
 public async startConnection(): Promise<void> {
@@ -36,15 +37,18 @@ this.connectionStatusSource.next('Disconnected');
 console.log('Error while starting connection: ' + err);
 }
 
-this.hubConnection.on('ReceiveMessage', (user, message) => {
-const newMessages = [...this.messagesSource.value, { user, message }];
+this.hubConnection.on('ReceiveMessage', (user, text) => {
+const newMessage = new Message();
+newMessage.user = user;
+newMessage.text = text;
+const newMessages = [...this.messagesSource.value, newMessage];
 this.messagesSource.next(newMessages);
 });
 }
 
-public async sendMessage(user: string, message: string): Promise<void> {
+public async sendMessage(message: Message): Promise<void> {
 try {
-await this.hubConnection.invoke('SendMessage', user, message);
+await this.hubConnection.invoke('SendMessage', message.user, message.text);
 } catch (err) {
 console.log('Error while sending message: ' + err);
 }

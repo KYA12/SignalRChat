@@ -1,6 +1,7 @@
 import { Component, OnInit, ChangeDetectionStrategy, OnDestroy } from '@angular/core';
 import { ChatService } from '../services/chat.service';
 import { Observable } from 'rxjs';
+import { Message } from '../models/message'; // Adjust the path as necessary
 
 @Component({
 selector: 'app-chat',
@@ -9,13 +10,13 @@ styleUrls: ['./chat.component.scss'],
 changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class ChatComponent implements OnInit, OnDestroy {
-messages$: Observable<{ user: string, message: string }[]>;
+messages$: Observable<Message[]>;
 user: string = '';
-message: string = '';
+text: string = '';
 connectionStatus$: Observable<string>;
 
 constructor(private chatService: ChatService) {
-this.messages$ = this.chatService.messages$; 
+this.messages$ = this.chatService.messages$;
 this.connectionStatus$ = this.chatService.connectionStatus$;
 }
 
@@ -26,9 +27,13 @@ console.error('Error starting connection:', error);
 }
 
 sendMessage(): void {
-if (this.message.trim()) {
-this.chatService.sendMessage(this.user, this.message).then(() => {
-this.message = '';
+if (this.text.trim()) {
+const newMessage = new Message();
+newMessage.user = this.user;
+newMessage.text = this.text;
+
+this.chatService.sendMessage(newMessage).then(() => {
+this.text = '';
 }).catch(error => {
 console.error('Error sending message:', error);
 });
@@ -41,7 +46,7 @@ console.error('Error disconnecting:', error);
 });
 }
 
-trackByMessages(index: number, message: { user: string, message: string }): any {
-return message ? message.message : undefined;
+trackByMessages(index: number, message: Message): any {
+return message ? message.text : undefined;
 }
 }
