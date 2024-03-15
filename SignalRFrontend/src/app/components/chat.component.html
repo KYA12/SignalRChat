@@ -1,0 +1,12 @@
+<div class="chat-container">
+    <ul class="messages-list">
+        <div *ngFor="let message of messages$ | async; trackBy: trackByMessages">
+            {{ message.user }}: {{ message.message }}
+            </div>
+    </ul>
+    <div class="message-box">
+            <input [(ngModel)]="user" placeholder="User" />
+            <input [(ngModel)]="message" placeholder="Type a message..." />
+            <button (click)="sendMessage()">Send</button>
+    </div>
+</div>
