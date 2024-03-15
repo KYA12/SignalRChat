@@ -2,11 +2,15 @@
     <ul class="messages-list">
         <div *ngFor="let message of messages$ | async; trackBy: trackByMessages">
             {{ message.user }}: {{ message.text }}
-            </div>
+        </div>
     </ul>
-    <div class="message-box">
-            <input [(ngModel)]="user" placeholder="User" />
-            <input [(ngModel)]="text" placeholder="Type a message..." />
-            <button (click)="sendMessage()">Send</button>
-    </div>
+    <form #chatForm="ngForm">
+        <div class="message-box">
+            <input name="user" [(ngModel)]="user" placeholder="User" required #userInput="ngModel" 
+                [class.is-invalid]="userInput.errors?.['required'] && userInput.touched" />
+            <input name="text" [(ngModel)]="text" placeholder="Type a message..." required #textInput="ngModel" 
+                [class.is-invalid]="textInput.errors?.['required'] && textInput.touched" />
+            <button (click)="sendMessage()" [disabled]="!chatForm.valid">Send</button>
+        </div>
+    </form>
 </div>
